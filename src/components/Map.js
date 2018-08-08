@@ -5,20 +5,20 @@ export default class Map extends Component {
 
   state = {
     locations: [
-      {name: 'Jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
-      {name: 'Orlando', location: {lat: 28.546863, lng: -81.373917}},
-      {name: 'Cape Canaveral', location: {lat: 28.392157, lng: -80.596978}},
-      {name: 'Miami', location: {lat: 25.774763, lng: -80.130467}},
-      {name: 'St Augustine', location: {lat: 29.906616, lng: -81.314784}},
-      {name: 'Green Cove Springs', location: {lat: 29.991212, lng: -81.689631}},
-      {name: 'Nocatee', location: {lat: 30.104096, lng:  -81.430318}},
-      {name: 'Dallas', location: {lat: 32.838814, lng: -96.786518}},
-      {name: 'Atlanta', location: {lat: 33.774483, lng: -84.382849}},
-      {name: 'Washington D.C.', location: {lat: 38.890270, lng: -77.008907}},
-      {name: 'New York', location: {lat: 40.736701, lng: -73.989334}},
-      {name: 'Cozumel', location: {lat: 20.508578, lng: -86.947737}},
-      {name: 'Cancun', location: {lat: 21.165197, lng: -86.827264}},
-      {name: 'Costa Maya', location: {lat: 18.735196, lng:  -87.691022}},
+      //   {name: 'Jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
+      //   {name: 'Orlando', location: {lat: 28.546863, lng: -81.373917}},
+      //   {name: 'Cape Canaveral', location: {lat: 28.392157, lng: -80.596978}},
+      //   {name: 'Miami', location: {lat: 25.774763, lng: -80.130467}},
+      //   {name: 'St Augustine', location: {lat: 29.906616, lng: -81.314784}},
+      //   {name: 'Green Cove Springs', location: {lat: 29.991212, lng: -81.689631}},
+      //   {name: 'Nocatee', location: {lat: 30.104096, lng:  -81.430318}},
+      //   {name: 'Dallas', location: {lat: 32.838814, lng: -96.786518}},
+      //   {name: 'Atlanta', location: {lat: 33.774483, lng: -84.382849}},
+      //   {name: 'Washington D.C.', location: {lat: 38.890270, lng: -77.008907}},
+      //   {name: 'New York', location: {lat: 40.736701, lng: -73.989334}},
+      //   {name: 'Cozumel', location: {lat: 20.508578, lng: -86.947737}},
+      //   {name: 'Cancun', location: {lat: 21.165197, lng: -86.827264}},
+      //   {name: 'Costa Maya', location: {lat: 18.735196, lng:  -87.691022}},
       {name: 'Belize', location: {lat: 17.490481,  lng: -88.202213}},
       {name: 'Roatan', location: {lat: 16.357849, lng:  -86.442765}},
       {name: 'St Thomas', location: {lat: 18.339866, lng: -64.9249165}},
@@ -53,7 +53,7 @@ export default class Map extends Component {
     let { infowindow } = this.state
     const bounds = new google.maps.LatLngBounds();
 
-    let loc = this.state.locations.map ( location => {
+    this.state.locations.map(location => {
       const marker = new google.maps.Marker({
         position: {lat: location.location.lat, lng: location.location.lng},
         map: this.map,
@@ -64,9 +64,9 @@ export default class Map extends Component {
         this.populateInfoWindow(marker, infowindow)
       })
 
-      this.setState((state) => {
+      this.setState((state) => ({
         markers: [...state.markers, marker]
-      })
+      }))
       bounds.extend(marker.position)
     })
     this.map.fitBounds(bounds)
@@ -85,16 +85,21 @@ export default class Map extends Component {
   }
 
   render() {
+    const { markers } = this.state
     return (
       <div>
         <div className="container">
-          <div className="sidebar text-input text-input-hidden">
-          </div>
-          <div role="application" className="map" ref="map">
-            loading map...
-          </div>
+          <div className="text-input">
+            <ul className="location">{
+              markers.map((m, i) =>
+                (<li key={i}>{m.title}</li>))
+            }</ul>
+        </div>
+        <div role="application" className="map" ref="map">
+          loading map...
         </div>
       </div>
+    </div>
     )
   }
 }
