@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom';
 export default class Map extends Component {
 
   state = {
+    newLocations: [
+
+    ],
     locations: [
       //   {name: 'Jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
       //   {name: 'Orlando', location: {lat: 28.546863, lng: -81.373917}},
@@ -32,9 +35,11 @@ export default class Map extends Component {
   }
   componentDidMount() {
     this.loadMap()
+    this.onclickLocation()
   }
   loadMap() {
     if (this.props && this.props.google) {
+      let that = this
       const {google} = this.props
       const maps = google.maps
       const mapRef = this.refs.map
@@ -45,7 +50,70 @@ export default class Map extends Component {
         mapTypeId: 'roadmap' })
       this.map = new maps.Map(node, mapConfig)
       this.addMarkers()
+      console.log(this.state.locations)
+      const input = document.getElementById('search-input');
+      const autocomplete = new google.maps.places.Autocomplete(input);
+      const {infowindow} = this.state;
+
+      // Bind the map's bounds (viewport) property to the autocomplete object,
+      // so that the autocomplete requests use the current map bounds for the
+      // bounds option in the request.
+      autocomplete.bindTo('bounds', this.map);
+
+      // Set the data fields to return when the user selects a place.
+      autocomplete.setFields(
+        ['address_components', 'geometry', 'icon', 'name']);
+
+      autocomplete.addListener('place_changed', function() {
+        infowindow.close();
+        const place = autocomplete.getPlace();
+        if (!place.geometry) {
+          // User entered the name of a Place that was not suggested and
+          // pressed the Enter key, or the Place Details request failed.
+          window.alert("No details available for input: '" + place.name + "'");
+          return;
+        }
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        let newlocation = {
+          name: place.name,
+          location: {lat: lat, lng: lng}
+        }
+        that.setState(state => ({
+          newLocations: [...state.newLocations, newlocation]
+        }))
+        console.log(that.state.newLocations);
+        var address = '';
+        if (place.address_components) {
+          address = [
+            (place.address_components[0] && place.address_components[0].short_name || ''),
+            (place.address_components[1] && place.address_components[1].short_name || ''),
+            (place.address_components[2] && place.address_components[2].short_name || '')
+          ].join(' ');
+        }
+        that.addMarkers()
+      });
     }
+  }
+
+  onclickLocation =  () => {
+    const { infowindow } = this.state
+
+    const displayInfowindow = (e) => {
+      const {markers} = this.state
+
+      const markerInd = markers.findIndex(m => m.title.toLowerCase() === e.target.innerText.toLowerCase())
+      this.populateInfoWindow(markers[markerInd], infowindow)
+    }
+    document.querySelector('.locations-list').addEventListener('click', function (e) {
+      if(e.target && e.target.nodeName === "LI") {
+        displayInfowindow(e)
+      }
+    })
+  }
+
+  handleValueChange = (e) => {
+    this.setState({query: e.target.value})
   }
 
   addMarkers = () => {
@@ -69,13 +137,31 @@ export default class Map extends Component {
       }))
       bounds.extend(marker.position)
     })
+    console.log(this.state.newLocations)
+    this.state.newLocations.map(newLocation => {
+      const newmarker = new google.maps.Marker({
+        position: {lat: newLocation.location.lat, lng: newLocation.location.lng},
+        map: this.map,
+        title: newLocation.name
+      });
+
+      newmarker.addListener('click', () => {
+        this.populateInfoWindow(newmarker, infowindow)
+      })
+
+      this.setState((state) => ({
+        newLocations: [...state.newLocations, newmarker]
+      }))
+      bounds.extend(newmarker.position)
+    })
+
     this.map.fitBounds(bounds)
   }
 
   populateInfoWindow = (marker, infowindow) => {
     if (infowindow.marker !== marker) {
       infowindow.marker = marker;
-      infowindow.setContent(`<h2>onClick works</h4>`);
+      infowindow.setContent(`<h2>${marker.title} onClick works</h2>`);
       infowindow.open(this.map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick', function() {
@@ -90,7 +176,8 @@ export default class Map extends Component {
       <div>
         <div className="container">
           <div className="text-input">
-            <ul className="location">{
+            <input role="search" type="text" value={this.state.value} onChange={this.handleValueChange} id="search-input"/>
+            <ul className="locations-list">{
               markers.map((m, i) =>
                 (<li key={i}>{m.title}</li>))
             }</ul>
