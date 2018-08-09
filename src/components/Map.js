@@ -4,24 +4,22 @@ import ReactDOM from 'react-dom';
 export default class Map extends Component {
 
   state = {
-    newLocations: [
-
-    ],
+    newLocations: [],
     locations: [
-      {name: 'Jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
-      {name: 'Orlando', location: {lat: 28.546863, lng: -81.373917}},
-      {name: 'Cape Canaveral', location: {lat: 28.392157, lng: -80.596978}},
-      {name: 'Miami', location: {lat: 25.774763, lng: -80.130467}},
-      {name: 'St Augustine', location: {lat: 29.906616, lng: -81.314784}},
-      {name: 'Green Cove Springs', location: {lat: 29.991212, lng: -81.689631}},
-      {name: 'Nocatee', location: {lat: 30.104096, lng:  -81.430318}},
-      {name: 'Dallas', location: {lat: 32.838814, lng: -96.786518}},
-      {name: 'Atlanta', location: {lat: 33.774483, lng: -84.382849}},
-      {name: 'Washington D.C.', location: {lat: 38.890270, lng: -77.008907}},
-      {name: 'New York', location: {lat: 40.736701, lng: -73.989334}},
-      {name: 'Cozumel', location: {lat: 20.508578, lng: -86.947737}},
-      {name: 'Cancun', location: {lat: 21.165197, lng: -86.827264}},
-      {name: 'Costa Maya', location: {lat: 18.735196, lng:  -87.691022}},
+      //   {name: 'Jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
+      //   {name: 'Orlando', location: {lat: 28.546863, lng: -81.373917}},
+      //   {name: 'Cape Canaveral', location: {lat: 28.392157, lng: -80.596978}},
+      //   {name: 'Miami', location: {lat: 25.774763, lng: -80.130467}},
+      //   {name: 'St Augustine', location: {lat: 29.906616, lng: -81.314784}},
+      //   {name: 'Green Cove Springs', location: {lat: 29.991212, lng: -81.689631}},
+      //   {name: 'Nocatee', location: {lat: 30.104096, lng:  -81.430318}},
+      //   {name: 'Dallas', location: {lat: 32.838814, lng: -96.786518}},
+      //   {name: 'Atlanta', location: {lat: 33.774483, lng: -84.382849}},
+      //   {name: 'Washington D.C.', location: {lat: 38.890270, lng: -77.008907}},
+      //   {name: 'New York', location: {lat: 40.736701, lng: -73.989334}},
+      //   {name: 'Cozumel', location: {lat: 20.508578, lng: -86.947737}},
+      //   {name: 'Cancun', location: {lat: 21.165197, lng: -86.827264}},
+      //   {name: 'Costa Maya', location: {lat: 18.735196, lng:  -87.691022}},
       {name: 'Belize', location: {lat: 17.490481,  lng: -88.202213}},
       {name: 'Roatan', location: {lat: 16.357849, lng:  -86.442765}},
       {name: 'St Thomas', location: {lat: 18.339866, lng: -64.9249165}},
@@ -39,7 +37,7 @@ export default class Map extends Component {
   }
   loadMap() {
     if (this.props && this.props.google) {
-      let that = this
+      const that = this
       const {google} = this.props
       const maps = google.maps
       const mapRef = this.refs.map
@@ -64,7 +62,7 @@ export default class Map extends Component {
       autocomplete.addListener('place_changed', function() {
         infowindow.close();
         const place = autocomplete.getPlace();
-        
+
         if (!place.geometry) {
           // User entered the name of a Place that was not suggested and
           // pressed the Enter key, or the Place Details request failed.
@@ -80,7 +78,6 @@ export default class Map extends Component {
         that.setState(state => ({
           newLocations: [...state.newLocations, newlocation]
         }))
-        console.log(that.state.newLocations);
         that.addMarkers()
       });
     }
@@ -108,7 +105,7 @@ export default class Map extends Component {
 
   addMarkers = () => {
     const {google} = this.props
-    let { infowindow } = this.state
+    const { infowindow } = this.state
     const bounds = new google.maps.LatLngBounds();
 
     this.state.locations.map(location => {
@@ -120,6 +117,9 @@ export default class Map extends Component {
 
       marker.addListener('click', () => {
         this.populateInfoWindow(marker, infowindow)
+      })
+      marker.addListener('dblclick', (e) => {
+        this.deletePlace(e)
       })
 
       this.setState((state) => ({
@@ -134,25 +134,32 @@ export default class Map extends Component {
         title: newLocation.name,
         icon: "http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png"
       });
-      console.log(newmarker)
 
       newmarker.addListener('click', () => {
         this.populateInfoWindow(newmarker, infowindow)
       })
 
-      this.setState((state) => ({
-        markers: [...state.markers, newmarker]
-      }))
+      this.setState((state) => {
+        markers: [...state.markers,newmarker]
+      })
       bounds.extend(newmarker.position)
     })
 
     this.map.fitBounds(bounds)
   }
 
+  deletePlace = (e) => {
+    const {markers} = this.state
+    const chosenOne = markers.filter((marker) =>
+      marker.title === e.Ha.target.title
+    );
+    chosenOne[0].setMap(null)
+  }
+
   populateInfoWindow = (marker, infowindow) => {
     if (infowindow.marker !== marker) {
       infowindow.marker = marker;
-      infowindow.setContent(`<h2>${marker.title} onClick works</h2>`);
+      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id="yoo">Yoo</button>`);
       infowindow.open(this.map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick', function() {
@@ -162,22 +169,30 @@ export default class Map extends Component {
   }
 
   render() {
-    const { markers } = this.state
+    const { locations,newLocations } = this.state
     return (
       <div>
         <div className="container">
           <div className="text-input">
             <input role="search" type="text" value={this.state.value} onChange={this.handleValueChange} id="search-input"/>
-            <ul className="locations-list">{
-              markers.map((m, i) =>
-                (<li key={i}>{m.title}</li>))
-            }</ul>
-        </div>
-        <div role="application" className="map" ref="map">
-          loading map...
+            <ul className="locations-list">
+              {
+                locations.map((m, i) =>
+                  <li key={i}>{m.name}</li>
+                )
+              }
+              {
+                newLocations.map((m, i) =>
+                  <li key={i}>{m.name}</li>
+                )
+              }
+            </ul>
+          </div>
+          <div role="application" className="map" ref="map">
+            loading map...
+          </div>
         </div>
       </div>
-    </div>
     )
   }
 }
