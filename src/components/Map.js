@@ -45,12 +45,9 @@ export default class Map extends Component {
       const mapRef = this.refs.map
       const node = ReactDOM.findDOMNode(mapRef)
       const mapConfig = Object.assign({}, {
-        zoom: 5,
-        center: {lat: 30.274438, lng: -81.388347},
         mapTypeId: 'roadmap' })
       this.map = new maps.Map(node, mapConfig)
       this.addMarkers()
-      console.log(this.state.locations)
       const input = document.getElementById('search-input');
       const autocomplete = new google.maps.places.Autocomplete(input);
       const {infowindow} = this.state;
@@ -62,11 +59,12 @@ export default class Map extends Component {
 
       // Set the data fields to return when the user selects a place.
       autocomplete.setFields(
-        ['address_components', 'geometry', 'icon', 'name']);
+        [ 'geometry', 'name']);
 
       autocomplete.addListener('place_changed', function() {
         infowindow.close();
         const place = autocomplete.getPlace();
+        
         if (!place.geometry) {
           // User entered the name of a Place that was not suggested and
           // pressed the Enter key, or the Place Details request failed.
@@ -83,14 +81,6 @@ export default class Map extends Component {
           newLocations: [...state.newLocations, newlocation]
         }))
         console.log(that.state.newLocations);
-        var address = '';
-        if (place.address_components) {
-          address = [
-            (place.address_components[0] && place.address_components[0].short_name || ''),
-            (place.address_components[1] && place.address_components[1].short_name || ''),
-            (place.address_components[2] && place.address_components[2].short_name || '')
-          ].join(' ');
-        }
         that.addMarkers()
       });
     }
@@ -142,15 +132,17 @@ export default class Map extends Component {
       const newmarker = new google.maps.Marker({
         position: {lat: newLocation.location.lat, lng: newLocation.location.lng},
         map: this.map,
-        title: newLocation.name
+        title: newLocation.name,
+        icon: "http://maps.google.com/mapfiles/ms/micons/blue-pushpin.png"
       });
+      console.log(newmarker)
 
       newmarker.addListener('click', () => {
         this.populateInfoWindow(newmarker, infowindow)
       })
 
       this.setState((state) => ({
-        newLocations: [...state.newLocations, newmarker]
+        markers: [...state.markers, newmarker]
       }))
       bounds.extend(newmarker.position)
     })
