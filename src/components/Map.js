@@ -45,10 +45,10 @@ export default class Map extends Component {
       const mapConfig = Object.assign({}, {
         mapTypeId: 'roadmap' })
       this.map = new maps.Map(node, mapConfig)
-      this.addMarkers()
       const input = document.getElementById('search-input');
       const autocomplete = new google.maps.places.Autocomplete(input);
       const {infowindow} = this.state;
+      this.addMarkers(true)
 
       // Bind the map's bounds (viewport) property to the autocomplete object,
       // so that the autocomplete requests use the current map bounds for the
@@ -78,7 +78,7 @@ export default class Map extends Component {
         that.setState(state => ({
           newLocations: [...state.newLocations, newlocation]
         }))
-        that.addMarkers()
+        that.addMarkers(false)
       });
     }
   }
@@ -103,7 +103,7 @@ export default class Map extends Component {
     this.setState({query: e.target.value})
   }
 
-  addMarkers = () => {
+  addMarkers = (initialLoad) => {
     const {google} = this.props
     const { infowindow } = this.state
     const bounds = new google.maps.LatLngBounds();
@@ -122,9 +122,11 @@ export default class Map extends Component {
         this.deletePlace(e)
       })
 
-      this.setState((state) => ({
-        markers: [...state.markers, marker]
-      }))
+      if(initialLoad) {
+        this.setState((state) => ({
+          markers: [...state.markers, marker]
+        }))
+      }
       bounds.extend(marker.position)
     })
     this.state.newLocations.map(newLocation => {
@@ -132,16 +134,19 @@ export default class Map extends Component {
         position: {lat: newLocation.location.lat, lng: newLocation.location.lng},
         map: this.map,
         title: newLocation.name,
-        icon: "http://maps.google.com/mapfiles/ms/micons/grn-pushpin.png"
+        icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
       });
 
       newmarker.addListener('click', () => {
         this.populateInfoWindow(newmarker, infowindow)
       })
-
-      this.setState((state) => {
-        markers: [...state.markers,newmarker]
+      newmarker.addListener('dblclick', (e) => {
+        this.deletePlace(e)
       })
+
+      this.setState((state) => ({
+        markers: [...state.markers,newmarker]
+      }))
       bounds.extend(newmarker.position)
     })
 
@@ -150,10 +155,24 @@ export default class Map extends Component {
 
   deletePlace = (e) => {
     const {markers} = this.state
-    const chosenOne = markers.filter((marker) =>
+    let fooArr = [];
+    let chosenOne = markers.filter((marker) => {
+      if(marker.title === e.Ha.currentTarget.title) {
+        return true
+      } else {
+        fooArr.push(marker)
+        return false
+      }
+    });
+    if(chosenOne.length > 0) {
+      chosenOne[0].setMap(null)
+    }
+    this.setState({
+      markers: fooArr
+    })
+    chosenOne = markers.filter((marker) =>
       marker.title === e.Ha.target.title
     );
-    chosenOne[0].setMap(null)
   }
 
   populateInfoWindow = (marker, infowindow) => {
@@ -169,7 +188,8 @@ export default class Map extends Component {
   }
 
   render() {
-    const { locations,newLocations } = this.state
+    const { markers,locations,newLocations } = this.state
+    console.log(markers)
     return (
       <div>
         <div className="container">
