@@ -29,11 +29,24 @@ export default class Map extends Component {
     ],
     query: '',
     markers: [],
-    infowindow: new this.props.google.maps.InfoWindow()
+    infowindow: new this.props.google.maps.InfoWindow(),
+    imgs: []
   }
   componentDidMount() {
     this.loadMap()
     this.onclickLocation()
+    fetch(`https://api.unsplash.com/search/photos?page=1&query='dm'`,{
+      headers: {
+        Authorization: 'Client-ID ed4ea3b388f4503fa9a5817e2e5250171fd92b3b61ff520ff9f6027cff251a67'
+      }
+    }).then(response => response.json())
+.then(data => {
+			this.setState({ imgs: data });
+		})
+		.catch(err => {
+			console.log('Error happened during fetching!', err);
+		});
+    console.log(this.state.imgs)
   }
   loadMap() {
     if (this.props && this.props.google) {
@@ -189,7 +202,6 @@ export default class Map extends Component {
 
   render() {
     const { markers,locations,newLocations } = this.state
-    console.log(markers)
     return (
       <div>
         <div className="container">
