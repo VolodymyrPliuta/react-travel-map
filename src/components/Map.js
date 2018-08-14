@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
+import LearnMore from './LearnMore';
 
 export default class Map extends Component {
 
@@ -39,14 +41,18 @@ export default class Map extends Component {
       headers: {
         Authorization: 'Client-ID ed4ea3b388f4503fa9a5817e2e5250171fd92b3b61ff520ff9f6027cff251a67'
       }
-    }).then(response => response.json())
-.then(data => {
-			this.setState({ imgs: data });
-		})
-		.catch(err => {
-			console.log('Error happened during fetching!', err);
-		});
-    console.log(this.state.imgs)
+    }).then(response => {
+      var result = response.json();
+      console.log(result);
+      return result;
+    })
+      .then(data => {
+        console.log(data)
+        this.setState({ imgs: data.results });
+      })
+      .catch(err => {
+        console.log('Error happened during fetching!', err);
+      });
   }
   loadMap() {
     if (this.props && this.props.google) {
@@ -191,7 +197,7 @@ export default class Map extends Component {
   populateInfoWindow = (marker, infowindow) => {
     if (infowindow.marker !== marker) {
       infowindow.marker = marker;
-      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id="yoo">Yoo</button>`);
+      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id='Learn_more'><Link to='/learnmore'>Learn more</Link></button>`);
       infowindow.open(this.map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick', function() {
@@ -223,6 +229,8 @@ export default class Map extends Component {
           <div role="application" className="map" ref="map">
             loading map...
           </div>
+          <LearnMore photo={this.state.imgs} />
+          <p> <Link to='/someurl'>Yoo</Link></p>
         </div>
       </div>
     )
