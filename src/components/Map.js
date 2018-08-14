@@ -35,6 +35,7 @@ export default class Map extends Component {
     imgs: []
   }
   componentDidMount() {
+  console.log(this.props)
     this.loadMap()
     this.onclickLocation()
     fetch(`https://api.unsplash.com/search/photos?page=1&query='dm'`,{
@@ -45,14 +46,12 @@ export default class Map extends Component {
       var result = response.json();
       console.log(result);
       return result;
-    })
-      .then(data => {
-        console.log(data)
-        this.setState({ imgs: data.results });
-      })
-      .catch(err => {
-        console.log('Error happened during fetching!', err);
-      });
+    }).then(data => {
+      console.log(data)
+      this.setState({ imgs: data.results });
+    }).catch(err => {
+      console.log('Error happened during fetching!', err);
+    });
   }
   loadMap() {
     if (this.props && this.props.google) {
@@ -197,7 +196,7 @@ export default class Map extends Component {
   populateInfoWindow = (marker, infowindow) => {
     if (infowindow.marker !== marker) {
       infowindow.marker = marker;
-      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id='Learn_more'><Link to='/learnmore'>Learn more</Link></button>`);
+      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id='Learn_more'><a href='/learnmore'>Learn more</a></button>`);
       infowindow.open(this.map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick', function() {

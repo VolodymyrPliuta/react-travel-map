@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import logo from '../logo.svg';
+import { Route } from 'react-router-dom';
 import '../App.css';
 import Map from './Map';
 import { GoogleApiWrapper } from 'google-maps-react'
+import LearnMore from './LearnMore';
 
 class App extends Component {
   render() {
@@ -14,7 +16,8 @@ class App extends Component {
           </svg>
         </a>
         <h1 className="heading"> Google Maps API + React </h1>
-        <Map  google={this.props.google}/>
+        <Route path='/' exact render={(props) => <Map google={this.props.google}/>} />
+        <Route path='/learnmore' component={LearnMore} />
       </div>
     );
   }
