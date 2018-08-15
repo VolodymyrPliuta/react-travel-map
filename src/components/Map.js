@@ -35,7 +35,6 @@ export default class Map extends Component {
     imgs: []
   }
   componentDidMount() {
-  console.log(this.props)
     this.loadMap()
     this.onclickLocation()
     fetch(`https://api.unsplash.com/search/photos?page=1&query='dm'`,{
@@ -228,7 +227,7 @@ export default class Map extends Component {
           <div role="application" className="map" ref="map">
             loading map...
           </div>
-          <LearnMore photo={this.state.imgs} />
+          <LearnMore query={this.state.query} photo={this.state.imgs} />
           <p> <Link to='/someurl'>Yoo</Link></p>
         </div>
       </div>

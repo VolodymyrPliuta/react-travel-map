@@ -1,0 +1,69 @@
+diff --git a/src/components/LearnMore.js b/src/components/LearnMore.js
+index 5259ae8..26e25e1 100644
+--- a/src/components/LearnMore.js
++++ b/src/components/LearnMore.js
+@@ -7,45 +7,49 @@ class LearnMore extends Component {
+   }
+ 
+   componentDidMount() {
+-    fetch(`https://api.unsplash.com/search/photos?page=1&query='dm'`,{
++    const query = 'dm';
++    fetch(`https://api.unsplash.com/search/photos?page=1&query=${query}`,{
+       headers: {
+         Authorization: 'Client-ID ed4ea3b388f4503fa9a5817e2e5250171fd92b3b61ff520ff9f6027cff251a67'
+       }
+     }).then(response => {
+-      var result = response.json();
+-      return result;
++      return response.json();
+     }).then(data => {
+-      this.setState({ imgs: data.results });
++      this.setState({
++        imgs: data.results
++      });
+     }).catch(err => {
+       console.log('Error happened during fetching!', err);
+     });
+ 
+     fetch(`http://api.nytimes.com/svc/search/v2/articlesearch.json?q=New+York&api-key=0fd16f9ca25b4e0ea140b5e5aa1aa085` ,{
+     }).then(response => {
+-      var result = response.json();
+-      return result;
+-    }).then(data => this.addArticle(data));
++      return response.json();
++    }).then(data => {
++      this.addArticle(data)
++    });
+   }
+ 
+   addArticle = (data) => {
+-    let htmlContent = '';
+-    const articles = data.response.docs;
++    const articles = [];
++    data.response.docs.map((article) => {
++      articles.push(<li key={article._id}><h2><a href={article.web_url}>{article.snippet}</a></h2></li>)
++    })
+     this.setState({
+       articles: articles
+     });
+   }
+   render() {
+-    console.log(this.state)
+     if(this.state.imgs.articles === 0) {
+-      return (<button>Learnmore</button>)
++      return <button>Learnmore</button>
+     } else {
+       return (
+         <div>
+-          {this.state.imgs.map((image) => <img src={image.urls.small} key={image.id}/>)}
++          {this.state.imgs.map((image) => {
++            return <img src={image.urls.small} key={image.id}/>
++          })}
+           <ul>
+-          {this.state.articles.map((article) =>
+-            <li><h2><a href={article.web_url}>{article.snippet}</a></h2></li>
+-          )}
++          {this.state.articles}
+           </ul>
+         </div>
+       )
