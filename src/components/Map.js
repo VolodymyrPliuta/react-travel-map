@@ -43,10 +43,8 @@ export default class Map extends Component {
       }
     }).then(response => {
       var result = response.json();
-      console.log(result);
       return result;
     }).then(data => {
-      console.log(data)
       this.setState({ imgs: data.results });
     }).catch(err => {
       console.log('Error happened during fetching!', err);
@@ -195,7 +193,7 @@ export default class Map extends Component {
   populateInfoWindow = (marker, infowindow) => {
     if (infowindow.marker !== marker) {
       infowindow.marker = marker;
-      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id='Learn_more'><a href='/learnmore'>Learn more</a></button>`);
+      infowindow.setContent(`<h2>${marker.title} onClick works</h2><button id='Learn_more'><a href='/learnmore?name=${marker.title}'>Learn more</a></button>`);
       infowindow.open(this.map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick', function() {

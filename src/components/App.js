@@ -7,7 +7,19 @@ import { GoogleApiWrapper } from 'google-maps-react'
 import LearnMore from './LearnMore';
 
 class App extends Component {
+  state = {
+    name: ''
+  }
+
+  updateName = (name) => {
+    console.log(this.state)
+    this.setState({
+      name: name
+    })
+  }
+
   render() {
+    console.log(this.state)
     return (
       <div>
         <a className="menu" tabIndex="0">
@@ -16,7 +28,7 @@ class App extends Component {
           </svg>
         </a>
         <h1 className="heading"> Google Maps API + React </h1>
-        <Route path='/' exact render={(props) => <Map google={this.props.google}/>} />
+        <Route path='/' exact render={(props) => <Map updateName={this.updateName} google={this.props.google}/>} />
         <Route path='/learnmore' component={LearnMore} />
       </div>
     );

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
 class LearnMore extends Component {
-  state = {
-    imgs: [],
-    articles: []
-  }
+	state = {
+		imgs: [],
+		articles: []
+	}
 
   componentDidMount() {
-    const query = 'dm';
+		const query = window.location.search.split('=')[1]
     fetch(`https://api.unsplash.com/search/photos?page=1&query=${query}`,{
       headers: {
         Authorization: 'Client-ID ed4ea3b388f4503fa9a5817e2e5250171fd92b3b61ff520ff9f6027cff251a67'
@@ -22,7 +22,7 @@ class LearnMore extends Component {
       console.log('Error happened during fetching!', err);
     });
 
-    fetch(`http://api.nytimes.com/svc/search/v2/articlesearch.json?q=New+York&api-key=0fd16f9ca25b4e0ea140b5e5aa1aa085` ,{
+    fetch(`http://api.nytimes.com/svc/search/v2/articlesearch.json?q=${query}&api-key=0fd16f9ca25b4e0ea140b5e5aa1aa085` ,{
     }).then(response => {
       return response.json();
     }).then(data => {
@@ -39,7 +39,9 @@ class LearnMore extends Component {
       articles: articles
     });
   }
+
   render() {
+		console.log(this.props)
     if(this.state.imgs.articles === 0) {
       return <button>Learnmore</button>
     } else {
