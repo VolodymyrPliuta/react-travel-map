@@ -1,5 +1,20 @@
 import React, { Component } from 'react';
 
+let unsplashStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '90%',
+  margin: 'auto'
+}
+
+let imageWidth = '90%';
+
+if(window.screen.width > 1024) {
+  imageWidth = '80%'
+}
+
+
 class LearnMore extends Component {
 	state = {
 		imgs: [],
@@ -46,9 +61,9 @@ class LearnMore extends Component {
       return <button>Learnmore</button>
     } else {
       return (
-        <div>
+        <div style = {unsplashStyle}>
           {this.state.imgs.map((image) => {
-            return <img src={image.urls.small} key={image.id}/>
+            return <img style={{margin: '3px', width: imageWidth}} src={image.urls.regular} key={image.id}/>
           })}
           <ul>
           {this.state.articles}
