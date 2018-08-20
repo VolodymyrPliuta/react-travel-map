@@ -8,10 +8,10 @@ let unsplashStyle = {
   margin: 'auto'
 }
 
-let imageWidth = '90%';
+let itemWidth = '90%';
 
 if(window.screen.width > 1024) {
-  imageWidth = '80%'
+  itemWidth = '80%'
 }
 
 
@@ -48,7 +48,7 @@ class LearnMore extends Component {
   addArticle = (data) => {
     const articles = [];
     data.response.docs.map((article) => {
-      articles.push(<li key={article._id}><h2><a href={article.web_url}>{article.snippet}</a></h2></li>)
+      articles.push(<li style={{listStyle: 'none', width: itemWidth, margin: '20px auto'}} key={article._id}><h2><a style={{ color: 'black'}} href={article.web_url}>{article.snippet}</a></h2></li>)
     })
     this.setState({
       articles: articles
@@ -63,7 +63,7 @@ class LearnMore extends Component {
       return (
         <div style = {unsplashStyle}>
           {this.state.imgs.map((image) => {
-            return <img style={{margin: '3px', width: imageWidth}} src={image.urls.regular} key={image.id}/>
+            return <img style={{margin: '3px', width: itemWidth}} src={image.urls.regular} key={image.id}/>
           })}
           <ul>
           {this.state.articles}
