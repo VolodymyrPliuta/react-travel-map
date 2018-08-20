@@ -6,7 +6,7 @@ import Map from './Map';
 import { GoogleApiWrapper } from 'google-maps-react'
 import LearnMore from './LearnMore';
 
-  let visible = false
+let visible = false
 
 class App extends Component {
   state = {

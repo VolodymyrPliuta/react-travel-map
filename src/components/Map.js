@@ -51,7 +51,7 @@ export default class Map extends Component {
       const input = document.getElementById('search-input');
       const autocomplete = new google.maps.places.Autocomplete(input);
       const {infowindow} = this.state;
-      this.addMarkers(true)
+      this.addMarkers()
 
       // Bind the map's bounds (viewport) property to the autocomplete object,
       // so that the autocomplete requests use the current map bounds for the
@@ -81,7 +81,7 @@ export default class Map extends Component {
         that.setState(state => ({
           newLocations: [...state.newLocations, newlocation]
         }))
-        that.addMarkers(false)
+        that.addMarkers()
       });
     }
   }
@@ -160,8 +160,14 @@ export default class Map extends Component {
   deletePlace = (e) => {
     const {markers} = this.state
     let fooArr = [];
+    let event;
     let chosenOne = markers.filter((marker) => {
-      if(marker.title === e.Ha.currentTarget.title) {
+      console.log(e)
+      if(e.hasOwnProperty('Ha')){
+        event = e.Ha.currentTarget.title
+      }
+      else{ event = e.va.currentTarget.title }
+      if(marker.title === event) {
         return true
       } else {
         fooArr.push(marker)
@@ -175,7 +181,7 @@ export default class Map extends Component {
       markers: fooArr
     })
     chosenOne = markers.filter((marker) =>
-      marker.title === e.Ha.target.title
+      marker.title === event
     );
   }
 
