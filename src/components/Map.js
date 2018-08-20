@@ -37,18 +37,6 @@ export default class Map extends Component {
   componentDidMount() {
     this.loadMap()
     this.onclickLocation()
-    fetch(`https://api.unsplash.com/search/photos?page=1&query='dm'`,{
-      headers: {
-        Authorization: 'Client-ID ed4ea3b388f4503fa9a5817e2e5250171fd92b3b61ff520ff9f6027cff251a67'
-      }
-    }).then(response => {
-      var result = response.json();
-      return result;
-    }).then(data => {
-      this.setState({ imgs: data.results });
-    }).catch(err => {
-      console.log('Error happened during fetching!', err);
-    });
   }
   loadMap() {
     if (this.props && this.props.google) {
@@ -226,7 +214,6 @@ export default class Map extends Component {
             loading map...
           </div>
           <LearnMore query={this.state.query} photo={this.state.imgs} />
-          <p> <Link to='/someurl'>Yoo</Link></p>
         </div>
       </div>
     )
