@@ -213,7 +213,6 @@ export default class Map extends Component {
           <div role="application" className="map" ref="map">
             loading map...
           </div>
-          <LearnMore query={this.state.query} photo={this.state.imgs} />
         </div>
       </div>
     )
