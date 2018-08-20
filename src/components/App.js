@@ -6,6 +6,8 @@ import Map from './Map';
 import { GoogleApiWrapper } from 'google-maps-react'
 import LearnMore from './LearnMore';
 
+  let visible = false
+
 class App extends Component {
   state = {
     name: ''
@@ -18,11 +20,26 @@ class App extends Component {
     })
   }
 
+  onclickMenu = () => {
+    const menu = document.getElementsByClassName('menu')
+    const list = document.getElementsByClassName('text-input')
+    console.log(list[0])
+    if (visible === true){
+      list[0].style.left = "-200px";
+      list[0].style.transition = "left 1s ease-in-out";
+      visible = false;
+    } else{
+      visible = true
+      list[0].style.left = "0"
+      list[0].style.transition = "left 1s ease-in-out";
+    }
+  }
+
   render() {
     console.log(this.state)
     return (
       <div>
-        <a className="menu" tabIndex="0">
+        <a onClick={this.onclickMenu} className="menu" tabIndex="0">
           <svg className="hamburger-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
           </svg>

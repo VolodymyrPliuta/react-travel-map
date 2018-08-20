@@ -86,6 +86,7 @@ export default class Map extends Component {
     }
   }
 
+
   onclickLocation =  () => {
     const { infowindow } = this.state
 
@@ -195,7 +196,7 @@ export default class Map extends Component {
     return (
       <div>
         <div className="container">
-          <div className="text-input">
+          <div className="text-input" style={{left: '-200px'}}>
             <input role="search" type="text" value={this.state.value} onChange={this.handleValueChange} id="search-input"/>
             <ul className="locations-list">
               {
