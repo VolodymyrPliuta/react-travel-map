@@ -14,7 +14,6 @@ class App extends Component {
   }
 
   updateName = (name) => {
-    console.log(this.state)
     this.setState({
       name: name
     })
@@ -36,7 +35,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <a onClick={this.onclickMenu} className="menu" tabIndex="0">
