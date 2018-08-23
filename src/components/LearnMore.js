@@ -56,14 +56,13 @@ class LearnMore extends Component {
   }
 
   render() {
-		console.log(this.props)
     if(this.state.imgs.articles === 0) {
       return <button>Learnmore</button>
     } else {
       return (
         <div style = {unsplashStyle}>
           {this.state.imgs.map((image) => {
-            return <img style={{margin: '3px', width: itemWidth}} src={image.urls.regular} key={image.id}/>
+            return <img style={{margin: '3px', width: itemWidth}} src={image.urls.regular} key={image.id} alt="images of the chosen place"/>
           })}
           <ul>
           {this.state.articles}

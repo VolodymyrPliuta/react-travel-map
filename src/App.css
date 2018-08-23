@@ -17,6 +17,12 @@
  .App-intro {
   font-size: large;
 }
+.color-red {
+  color: red;
+}
+.color-green {
+  color: #72e74e;
+}
  @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -28,8 +34,9 @@
  .heading {
   margin: 0;
   text-align: center;
-  background-color: #9f8ef9;
+  background-color: #fff200;
   padding: 0.5cm;
+  font-family: "fantasy";
 }
  .map {
   margin: 0;
@@ -42,7 +49,7 @@
 }
  .text-input {
   width: 15%;
-  background-color: darkslategray;
+  background-color: #2b5267;
   height: 100vh;
 }
  .text-input input {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import { Route } from 'react-router-dom';
 import '../App.css';
 import Map from './Map';
@@ -42,7 +41,7 @@ class App extends Component {
             <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
           </svg>
         </a>
-        <h1 className="heading"> Google Maps API + React </h1>
+        <h1 className="heading color-red">Places I visited & <span className="color-green">going to go</span></h1>
         <Route path='/' exact render={(props) => <Map updateName={this.updateName} google={this.props.google}/>} />
         <Route path='/learnmore' component={LearnMore} />
       </div>

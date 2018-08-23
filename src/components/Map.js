@@ -8,20 +8,20 @@ export default class Map extends Component {
    state = {
      newLocations: [],
      locations: [
-       //   {name: 'Jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
-       //   {name: 'Orlando', location: {lat: 28.546863, lng: -81.373917}},
-       //   {name: 'Cape Canaveral', location: {lat: 28.392157, lng: -80.596978}},
-       //   {name: 'Miami', location: {lat: 25.774763, lng: -80.130467}},
-       //   {name: 'St Augustine', location: {lat: 29.906616, lng: -81.314784}},
-       //   {name: 'Green Cove Springs', location: {lat: 29.991212, lng: -81.689631}},
-       //   {name: 'Nocatee', location: {lat: 30.104096, lng:  -81.430318}},
-       //   {name: 'Dallas', location: {lat: 32.838814, lng: -96.786518}},
-       //   {name: 'Atlanta', location: {lat: 33.774483, lng: -84.382849}},
-       //   {name: 'Washington D.C.', location: {lat: 38.890270, lng: -77.008907}},
-       //   {name: 'New York', location: {lat: 40.736701, lng: -73.989334}},
-       //   {name: 'Cozumel', location: {lat: 20.508578, lng: -86.947737}},
-       //   {name: 'Cancun', location: {lat: 21.165197, lng: -86.827264}},
-       //   {name: 'Costa Maya', location: {lat: 18.735196, lng:  -87.691022}},
+       {name: 'jacksonville', location: {lat: 30.274438, lng:  -81.388347}},
+       {name: 'orlando', location: {lat: 28.546863, lng: -81.373917}},
+       {name: 'cape canaveral', location: {lat: 28.392157, lng: -80.596978}},
+       {name: 'miami', location: {lat: 25.774763, lng: -80.130467}},
+       {name: 'st augustine', location: {lat: 29.906616, lng: -81.314784}},
+       {name: 'green cove springs', location: {lat: 29.991212, lng: -81.689631}},
+       {name: 'nocatee', location: {lat: 30.104096, lng:  -81.430318}},
+       {name: 'dallas', location: {lat: 32.838814, lng: -96.786518}},
+       {name: 'atlanta', location: {lat: 33.774483, lng: -84.382849}},
+       {name: 'washington d.c.', location: {lat: 38.890270, lng: -77.008907}},
+       {name: 'new york', location: {lat: 40.736701, lng: -73.989334}},
+       {name: 'cozumel', location: {lat: 20.508578, lng: -86.947737}},
+       {name: 'cancun', location: {lat: 21.165197, lng: -86.827264}},
+       {name: 'Costa Maya', location: {lat: 18.735196, lng:  -87.691022}},
        {name: 'Belize', location: {lat: 17.490481,  lng: -88.202213}},
        {name: 'Roatan', location: {lat: 16.357849, lng:  -86.442765}},
        {name: 'St Thomas', location: {lat: 18.339866, lng: -64.9249165}},
@@ -199,7 +199,7 @@ export default class Map extends Component {
     return (
       <div>
         <div className="container">
-          <div className="text-input" style={{left: '-200px'}}>
+          <div className="text-input" style={{left: '-200px',overflowY: 'scroll', overflowX: 'hidden'}}>
             <input role="search" type="text" value={this.state.value} onChange={this.handleValueChange} id="search-input"/>
             <ul className="locations-list">
               {
