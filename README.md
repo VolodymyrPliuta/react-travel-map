@@ -1,5 +1,5 @@
 # Travel Map
-
+![map of North America](travel.png)
 Travel Map is a Single Page Application built with React.js
 
 ## Table of Contents
