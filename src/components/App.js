@@ -19,17 +19,20 @@ class App extends Component {
   }
 
   onclickMenu = () => {
-    const menu = document.getElementsByClassName('menu')
     const list = document.getElementsByClassName('text-input')
-    console.log(list[0])
-    if (visible === true){
-      list[0].style.left = "-200px";
-      list[0].style.transition = "left 1s ease-in-out";
-      visible = false;
-    } else{
-      visible = true
-      list[0].style.left = "0"
-      list[0].style.transition = "left 1s ease-in-out";
+    if (list.length == 0) {
+      window.location.assign("/") 
+    }
+    else{
+      if (visible === true){
+        list[0].style.left = "-200px";
+        list[0].style.transition = "left 1s ease-in-out";
+        visible = false;
+      } else{
+        visible = true
+        list[0].style.left = "0"
+        list[0].style.transition = "left 1s ease-in-out";
+      }
     }
   }
 
