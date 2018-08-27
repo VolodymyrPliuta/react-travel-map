@@ -20,6 +20,7 @@ then
 
 ```
 cd React-travel-map
+npm install
 npm start
 ```
 
