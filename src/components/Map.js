@@ -54,25 +54,52 @@ export default class Map extends Component {
       const {infowindow} = this.state;
       const bounds = new maps.LatLngBounds();
 
-      let markers = [];
-      this.state.locations.map((location) => {
-        const marker = new google.maps.Marker({
-          position: {lat: location.location.lat, lng: location.location.lng},
-          map: map,
-          title: location.name
+      fetch('http://localhost:8999/api/locations')
+        .then(response => {
+          return response.json();
+        }).then(data => {
+          let markers = [];
+          data.map(location => {
+            const marker = new google.maps.Marker({
+              dbId: location.id,
+              position: {lat: location.Lat, lng: location.Lng},
+              icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+              map: map,
+              title: location.Name
+            })
+            marker.addListener('dblclick', (e) => {
+              this.deletePlace(e)
+            })
+            markers.push(marker)
+            console.log(marker)
+            bounds.extend(marker.position)
+            marker.addListener('click', () => {
+              that.populateInfoWindow(marker, infowindow)
+            })
+            that.setState({
+              newLocations: [ ...that.state.newLocations , { name: location.Name, location: { lat: location.Lat , lat: location.Lng }}]
+            })
+          })
+          this.state.locations.map((location) => {
+            const marker = new google.maps.Marker({
+              position: {lat: location.location.lat, lng: location.location.lng},
+              map: map,
+              title: location.name
+            })
+            markers.push(marker)
+            bounds.extend(marker.position)
+            marker.addListener('click', () => {
+              that.populateInfoWindow(marker, infowindow)
+            })
+          })
+          map.fitBounds(bounds)
+          this.setState({
+            map,
+            markers,
+            bounds
+          })
         })
-        markers.push(marker)
-        bounds.extend(marker.position)
-        marker.addListener('click', () => {
-          that.populateInfoWindow(marker, infowindow)
-        })
-      })
-      map.fitBounds(bounds)
-      this.setState({
-        map,
-        markers,
-        bounds
-      })
+
 
       // Bind the map's bounds (viewport) property to the autocomplete object,
       // so that the autocomplete requests use the current map bounds for the
@@ -136,30 +163,41 @@ export default class Map extends Component {
         icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
       });
 
+        fetch('http://localhost:8999/api/addlocations' ,{
+          method: 'post',
+          body: JSON.stringify(newlocation),
+          headers: {
+            "Content-type": "application/json"
+          }
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          this.setState((state) => ({
+            markers: [...state.markers,newmarker]
+          }))
+          bounds.extend(newmarker.position),
+          this.state.map.fitBounds(bounds)
+        })
+
       newmarker.addListener('click', () => {
         this.populateInfoWindow(newmarker, infowindow)
       })
 
       newmarker.addListener('dblclick', (e) => {
-        console.log(e)
         this.deletePlace(e)
       })
 
-      this.setState((state) => ({
-        markers: [...state.markers,newmarker]
-      }))
-      bounds.extend(newmarker.position)
-
-    this.state.map.fitBounds(bounds)
   }
 
   deletePlace = (e) => {
     let {newLocations,markers} = this.state
     let markersArray = [];
     let event;
+    let id
     let chosenOne = markers.filter((marker) => {
       event = e.va.currentTarget.title
       if(marker.title === event) {
+        id = marker.dbId;
         return true
       } else {
         markersArray.push(marker)
@@ -174,12 +212,20 @@ export default class Map extends Component {
       console.log(newLocations)
       if(newLocations.length >= 0) {
         chosenOne[0].setMap(null)
+        console.log(e)
+        fetch(`http://localhost:8999/api/dellocations/${id}` ,{
+          method: 'delete'
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          //this.deletePlace(e)
+          this.setState({
+            markers: markersArray,
+            newLocations
+          })
+        });
       }
     }
-    this.setState({
-      markers: markersArray,
-      newLocations
-    })
   }
 
   populateInfoWindow = (marker, infowindow) => {
