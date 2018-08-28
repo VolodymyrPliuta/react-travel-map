@@ -20,7 +20,7 @@ class App extends Component {
 
   onclickMenu = () => {
     const list = document.getElementsByClassName('text-input')
-    if (list.length == 0) {
+    if (list.length === 0) {
       window.location.assign("/") 
     }
     else{
