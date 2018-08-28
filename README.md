@@ -4,11 +4,12 @@ Travel Map is a Single Page Application built with React.js
 
 ## Table of Contents
 
-- [Instalation](#instalation)
+- [Installation](#installation)
+- [Installation with Back-End](#installation-with-back-end)
 - [How to use](#how-to-use)
 - [Sending Feedback](#sending-feedback)
 
-## Instalation
+## Installation
 
 Run in your terminal:
 
@@ -23,6 +24,53 @@ cd React-travel-map
 npm install
 npm start
 ```
+## Installation with Back-End
+
+I wrote back-end code as well to keep green markers - places <br>
+I am going to on the map. To use that code you should switch to<br>
+express branch
+
+```
+git checkout express
+```
+
+Clone express.js server
+
+```
+git@github.com:VolodymyrPliuta/Travel-server.git
+```
+To run the server, run next command in your terminal
+
+```
+npm install
+npm start
+```
+
+You will need to install MySQL database management system on your computer
+
+```
+sudo apt-get update
+sudo apt-get install mysql-server
+mysql_secure_installation
+```
+After MySQL is installed you should open it's CLI with
+
+```
+sudo -i mysql
+```
+
+Run next in MySQL CLI to create database and table with columns
+
+```
+CREATE DATABASE travel;
+CREATE TABLE newLocation (
+    id int,
+    Name varchar
+    Lat float(10, 6),
+    Lng float(10, 6)
+);
+```
+
 
 ## How to use
 
