@@ -179,12 +179,14 @@ export default class Map extends Component {
 
   populateInfoWindow = (marker, infowindow) => {
     if (infowindow.marker !== marker) {
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);
       infowindow.marker = marker;
       infowindow.setContent(`<h2>${marker.title}</h2><button id='Learn_more'><a href='/learnmore?name=${marker.title}'>Learn more</a></button>`);
       infowindow.open(this.map, marker);
       // Make sure the marker property is cleared if the infowindow is closed.
       infowindow.addListener('closeclick', function() {
         infowindow.marker = null;
+        marker.setAnimation(null);
       });
     }
   }
