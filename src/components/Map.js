@@ -29,7 +29,8 @@ export default class Map extends Component {
      markers: [],
      infowindow: new this.props.google.maps.InfoWindow(),
      map: null,
-     bounds: null
+     bounds: null,
+     defaultLocations: null
   }
 
   componentDidMount() {
@@ -47,9 +48,13 @@ export default class Map extends Component {
         mapTypeId: 'roadmap' })
       const map = new maps.Map(node, mapConfig)
       const input = document.getElementById('search-input');
-      const autocomplete = new google.maps.places.Autocomplete(input);
+      //      const autocomplete = new google.maps.places.Autocomplete(input);
       const {infowindow} = this.state;
       const bounds = new maps.LatLngBounds();
+
+      this.setState({
+        defaultLocations: this.state.locations
+      })
 
       let markers = [];
       this.state.locations.map((location) => {
@@ -64,36 +69,31 @@ export default class Map extends Component {
           that.populateInfoWindow(marker, infowindow)
         })
       })
+        input.addEventListener('keyup', (e) => {
+          let input = e.target.value
+          let filterResult = this.state.locations.filter((location) => {
+            if(location.name.indexOf(input) >= 0) {
+              return true
+            }
+            return false
+          })
+          if(input == 0){
+            this.setState({
+              locations: this.state.defaultLocations
+            })
+          }
+          else{
+          this.setState({
+            locations: filterResult
+          })
+          }
+        })
       map.fitBounds(bounds)
       this.setState({
         map,
         markers,
         bounds
       })
-
-      // Bind the map's bounds (viewport) property to the autocomplete object,
-      // so that the autocomplete requests use the current map bounds for the
-      // bounds option in the request.
-      autocomplete.bindTo('bounds', map);
-
-      // Set the data fields to return when the user selects a place.
-      autocomplete.setFields(
-        [ 'geometry', 'name']
-      );
-
-      autocomplete.addListener('place_changed', function() {
-        infowindow.close();
-        const place = autocomplete.getPlace();
-
-        if (!place.geometry) {
-          // User entered the name of a Place that was not suggested and
-          // pressed the Enter key, or the Place Details request failed.
-          window.alert("No details available for input: '" + place.name + "'");
-          return;
-        }
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-      });
     }
   }
 
