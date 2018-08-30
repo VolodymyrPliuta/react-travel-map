@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 export default class Map extends Component {
 
    state = {
-     newLocations: [],
      locations: [
        {name: 'Atlanta', location: {lat: 33.774483, lng: -84.382849}},
        {name: 'Belize', location: {lat: 17.490481,  lng: -88.202213}},
@@ -94,14 +93,6 @@ export default class Map extends Component {
         }
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
-        let newlocation = {
-          name: place.name,
-          location: {lat: lat, lng: lng}
-        }
-        that.setState(state => ({
-          newLocations: [...state.newLocations, newlocation]
-        }))
-        that.addLocation(newlocation)
       });
     }
   }
@@ -123,35 +114,8 @@ export default class Map extends Component {
     })
   }
 
-  addLocation = (newlocation) => {
-    const {google} = this.props
-    const { infowindow,bounds } = this.state
-
-      const newmarker = new google.maps.Marker({
-        position: {lat: newlocation.location.lat, lng: newlocation.location.lng},
-        map: this.state.map,
-        title: newlocation.name,
-        icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
-      });
-
-      newmarker.addListener('click', () => {
-        this.populateInfoWindow(newmarker, infowindow)
-      })
-
-      newmarker.addListener('dblclick', (e) => {
-        this.deletePlace(e)
-      })
-
-      this.setState((state) => ({
-        markers: [...state.markers,newmarker]
-      }))
-      bounds.extend(newmarker.position)
-
-    this.state.map.fitBounds(bounds)
-  }
-
   deletePlace = (e) => {
-    let {newLocations,markers} = this.state
+    let {markers} = this.state
     let markersArray = [];
     let event;
     let chosenOne = markers.filter((marker) => {
@@ -163,18 +127,6 @@ export default class Map extends Component {
         return false
       }
     });
-    if(chosenOne.length > 0) {
-      newLocations = newLocations.filter((_location) => 
-        _location.name.toLowerCase() !== e.va.currentTarget.title.toLowerCase()
-      )
-      if(newLocations.length >= 0) {
-        chosenOne[0].setMap(null)
-      }
-    }
-    this.setState({
-      markers: markersArray,
-      newLocations
-    })
   }
 
   populateInfoWindow = (marker, infowindow) => {
@@ -192,7 +144,7 @@ export default class Map extends Component {
   }
 
   render() {
-    const { locations,newLocations } = this.state
+    const { locations } = this.state
     return (
       <div>
         <div className="container">
@@ -201,11 +153,6 @@ export default class Map extends Component {
             <ul className="locations-list">
               {
                 locations.map((m, i) =>
-                  <li key={i}>{m.name}</li>
-                )
-              }
-              {
-                newLocations.map((m, i) =>
                   <li key={i}>{m.name}</li>
                 )
               }
