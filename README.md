@@ -14,13 +14,13 @@ Travel Map is a Single Page Application built with React.js
 Run in your terminal:
 
 ```
-git clone git@github.com:VolodymyrPliuta/React-travel-map.git
+git clone git@github.com:VolodymyrPliuta/react-travel-map.git
 ```
 
 then
 
 ```
-cd React-travel-map
+cd react-travel-map
 npm install
 npm start
 ```
@@ -37,7 +37,7 @@ git checkout express
 Clone express.js server
 
 ```
-git@github.com:VolodymyrPliuta/Travel-server.git
+git@github.com:VolodymyrPliuta/travel-server.git
 ```
 To run the server, run next command in your terminal
 
